@@ -1,0 +1,16 @@
+{
+  "name": "gulptask-tsc",
+  "version": "0.1.0",
+  "description": "TypeScript compile task for gulp.js",
+  "main": "./index.js",
+  "repository": "https://MasatoMakino@github.com/MasatoMakino/gulptask-tsc.git",
+  "author": "MasatoMakino <unagiinu.g@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "typescript": "^3.4.5"
+  },
+  "devDependencies": {
+    "prettier": "^1.17.1"
+  }
+}

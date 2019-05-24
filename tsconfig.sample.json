@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es2015",
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./bin",
+    "rootDir": "./sample",
+
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "include": ["sample/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
