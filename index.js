@@ -1,6 +1,7 @@
 const { exec } = require("child_process");
 const path = require("path");
-
+const del = require("del");
+const { series } = require("gulp");
 /**
  * @typedef Option
  * @param {string} [project = "./tsconfig.json"]
@@ -9,6 +10,7 @@ const path = require("path");
 /**
  * @typedef Tasks
  * @param {Function} tsc
+ * @param {Function} tscClean
  * @param {Function} watchTsc
  */
 
@@ -21,14 +23,36 @@ module.exports = option => {
   if (option == null) option = {};
   if (option.project == null) option.project = "./tsconfig.json";
 
-  option.project = path.resolve( process.cwd(), option.project );
-  console.log( option.project );
+  option.project = path.resolve(process.cwd(), option.project);
+  const projectJson = require(option.project);
+  let binDir;
+  if (projectJson.compilerOptions.outDir) {
+    binDir = path.resolve(projectJson.compilerOptions.outDir);
+  }
+
+  const clean = cb => {
+    const pathArray = [`./*.tsbuildinfo`];
+    if (binDir) {
+      pathArray.push(`${binDir}/*.(d.ts|map|js|tsbuildinfo)`);
+    } else {
+      console.log(
+        "tsconfig.jsonにoutDirオプションた設定されていません。tsbuildinfo以外のファイルの削除はスキップされます。"
+      );
+    }
+
+    return del(pathArray).then(paths => {
+      console.log("Files and folders that would be deleted:", paths);
+      cb();
+    });
+  };
 
   const tsc = cb => {
     const callback = onCompleteExecTask(cb);
     const child = exec(`npx tsc --project ${option.project}`, callback);
     child.stdout.on("data", onStdOut);
   };
+
+  const tscClean = series(clean, tsc);
 
   const watchTsc = () => {
     const callback = onCompleteExecTask();
@@ -38,6 +62,7 @@ module.exports = option => {
 
   return {
     tsc: tsc,
+    tscClean: tscClean,
     watchTsc: watchTsc
   };
 };
