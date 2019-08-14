@@ -2,6 +2,9 @@ const { exec } = require("child_process");
 const path = require("path");
 const del = require("del");
 const { series } = require("gulp");
+const Hjson = require("hjson");
+const fs = require("fs");
+
 /**
  * @typedef Option
  * @param {string} [project = "./tsconfig.json"]
@@ -24,7 +27,8 @@ module.exports = option => {
   if (option.project == null) option.project = "./tsconfig.json";
 
   option.project = path.resolve(process.cwd(), option.project);
-  const projectJson = require(option.project);
+
+  const projectJson = Hjson.parse(fs.readFileSync(option.project, "utf8"));
   let binDir;
   if (projectJson.compilerOptions.outDir) {
     binDir = path.resolve(projectJson.compilerOptions.outDir);

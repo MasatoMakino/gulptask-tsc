@@ -9,6 +9,7 @@
   "dependencies": {
     "del": "^5.0.0",
     "gulp": "^4.0.2",
+    "hjson": "^3.1.2",
     "typescript": "^3.5.3"
   },
   "devDependencies": {

@@ -8,7 +8,8 @@
     "outDir": "./bin",
     "rootDir": "./sample",
 
-    "moduleResolution": "node",
+    /* allow comment */
+    "moduleResolution": "node", //commentable
     "esModuleInterop": true
   },
   "include": ["sample/**/*"],
