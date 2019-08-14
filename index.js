@@ -23,21 +23,12 @@ const fs = require("fs");
  * @return {Tasks} gulpタスク
  */
 module.exports = option => {
-  if (option == null) option = {};
-  if (option.project == null) option.project = "./tsconfig.json";
-
-  option.project = path.resolve(process.cwd(), option.project);
-
-  const projectJson = Hjson.parse(fs.readFileSync(option.project, "utf8"));
-  let binDir;
-  if (projectJson.compilerOptions.outDir) {
-    binDir = path.resolve(projectJson.compilerOptions.outDir);
-  }
+  option = initOption(option);
 
   const clean = cb => {
     const pathArray = [`./*.tsbuildinfo`];
-    if (binDir) {
-      pathArray.push(`${binDir}/*.(d.ts|map|js|tsbuildinfo)`);
+    if (option.binDir) {
+      pathArray.push(`${option.binDir}/*.(d.ts|map|js|tsbuildinfo)`);
     } else {
       console.log(
         "tsconfig.jsonにoutDirオプションた設定されていません。tsbuildinfo以外のファイルの削除はスキップされます。"
@@ -70,6 +61,19 @@ module.exports = option => {
     watchTsc: watchTsc
   };
 };
+
+function initOption(option) {
+  if (option == null) option = {};
+  if (option.project == null) option.project = "./tsconfig.json";
+
+  option.project = path.resolve(process.cwd(), option.project);
+
+  const projectJson = Hjson.parse(fs.readFileSync(option.project, "utf8"));
+  if (projectJson.compilerOptions.outDir) {
+    option.binDir = path.resolve(projectJson.compilerOptions.outDir);
+  }
+  return option;
+}
 
 const onCompleteExecTask = cb => {
   return (error, stdout, stderr) => {
