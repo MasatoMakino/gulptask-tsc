@@ -31,7 +31,7 @@ module.exports = option => {
     child.stdout.on("data", onStdOut);
   };
 
-  const tscClean = series(getCleanTask(option.binDir), tsc);
+  const tscClean = series(getCleanTask(option), tsc);
 
   const watchTsc = () => {
     const callback = onCompleteExecTask();
@@ -51,19 +51,54 @@ function initOption(option) {
   if (option.project == null) option.project = "./tsconfig.json";
 
   option.project = path.resolve(process.cwd(), option.project);
+  option.projectDir = path.dirname(option.project);
 
   const projectJson = Hjson.parse(fs.readFileSync(option.project, "utf8"));
   if (projectJson.compilerOptions.outDir) {
-    option.binDir = path.resolve(projectJson.compilerOptions.outDir);
+    option.binDir = path.resolve(
+      option.projectDir,
+      projectJson.compilerOptions.outDir
+    );
   }
+
+  initBuildInfoDir(option, projectJson);
   return option;
 }
 
-const getCleanTask = binDir => {
+/**
+ * .tsbuildinfoファイルのパスを特定する。
+ * outDirとrootDirのディレクトリが別階層に分かれている場合、.tsbuildinfoファイルはtsconfigディレクトリのサブディレクトリに格納されるため。
+ * @param option
+ * @param projectJson
+ * @return {*}
+ */
+function initBuildInfoDir(option, projectJson) {
+  option.buildInfoDir = option.projectDir;
+
+  if (!projectJson.compilerOptions.rootDir) return option;
+
+  const compilerOption = projectJson.compilerOptions;
+  if (
+    path.dirname(compilerOption.outDir) === path.dirname(compilerOption.rootDir)
+  ) {
+    return option;
+  }
+
+  const p = path.relative(
+    path.dirname(option.projectDir, projectJson.compilerOptions.rootDir),
+    option.projectDir
+  );
+  option.buildInfoDir = path.resolve(option.projectDir, p);
+
+  return option;
+}
+
+const getCleanTask = option => {
   const clean = cb => {
-    const pathArray = [`./*.tsbuildinfo`];
-    if (binDir) {
-      pathArray.push(`${binDir}/*.(d.ts|map|js|tsbuildinfo)`);
+    const pathArray = [`${option.buildInfoDir}/*.tsbuildinfo`];
+
+    if (option.binDir) {
+      pathArray.push(`${option.binDir}/*.(d.ts|map|js|tsbuildinfo)`);
     } else {
       console.log(
         "tsconfig.jsonにoutDirオプションた設定されていません。tsbuildinfo以外のファイルの削除はスキップされます。"
