@@ -25,29 +25,13 @@ const fs = require("fs");
 module.exports = option => {
   option = initOption(option);
 
-  const clean = cb => {
-    const pathArray = [`./*.tsbuildinfo`];
-    if (option.binDir) {
-      pathArray.push(`${option.binDir}/*.(d.ts|map|js|tsbuildinfo)`);
-    } else {
-      console.log(
-        "tsconfig.jsonにoutDirオプションた設定されていません。tsbuildinfo以外のファイルの削除はスキップされます。"
-      );
-    }
-
-    return del(pathArray).then(paths => {
-      console.log("Files and folders that would be deleted:", paths);
-      cb();
-    });
-  };
-
   const tsc = cb => {
     const callback = onCompleteExecTask(cb);
     const child = exec(`npx tsc --project ${option.project}`, callback);
     child.stdout.on("data", onStdOut);
   };
 
-  const tscClean = series(clean, tsc);
+  const tscClean = series(getCleanTask(option.binDir), tsc);
 
   const watchTsc = () => {
     const callback = onCompleteExecTask();
@@ -74,6 +58,25 @@ function initOption(option) {
   }
   return option;
 }
+
+const getCleanTask = binDir => {
+  const clean = cb => {
+    const pathArray = [`./*.tsbuildinfo`];
+    if (binDir) {
+      pathArray.push(`${binDir}/*.(d.ts|map|js|tsbuildinfo)`);
+    } else {
+      console.log(
+        "tsconfig.jsonにoutDirオプションた設定されていません。tsbuildinfo以外のファイルの削除はスキップされます。"
+      );
+    }
+
+    return del(pathArray).then(paths => {
+      console.log("Files and folders that would be deleted:", paths);
+      cb();
+    });
+  };
+  return clean;
+};
 
 const onCompleteExecTask = cb => {
   return (error, stdout, stderr) => {
