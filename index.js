@@ -98,7 +98,7 @@ const getCleanTask = option => {
     const pathArray = [`${option.buildInfoDir}/*.tsbuildinfo`];
 
     if (option.binDir) {
-      pathArray.push(`${option.binDir}/*.(d.ts|map|js|tsbuildinfo)`);
+      pathArray.push(`${option.binDir}/**/*.(d.ts|map|js|tsbuildinfo)`);
     } else {
       console.log(
         "tsconfig.jsonにoutDirオプションた設定されていません。tsbuildinfo以外のファイルの削除はスキップされます。"
