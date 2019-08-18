@@ -9,12 +9,7 @@ const Clean_1 = require("./Clean");
  * @param {Option} [option]
  * @return {Tasks} gulpタスク
  */
-module.exports = getTasks;
-/**
- *
- * @param option
- */
-function getTasks(option) {
+function get(option) {
     option = initOption(option);
     const tsc = cb => {
         const callback = onCompleteExecTask(cb);
@@ -33,6 +28,7 @@ function getTasks(option) {
         watchTsc: watchTsc
     };
 }
+exports.get = get;
 function initOption(option) {
     if (option == null)
         option = {};

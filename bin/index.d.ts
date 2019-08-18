@@ -16,4 +16,10 @@ export interface Tasks {
     tscClean: Function;
     watchTsc: Function;
 }
+/**
+ * tsc実行タスクを取得する。
+ * @param {Option} [option]
+ * @return {Tasks} gulpタスク
+ */
+export declare function get(option: Option): Tasks;
 //# sourceMappingURL=index.d.ts.map

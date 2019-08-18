@@ -29,13 +29,7 @@ export interface Tasks {
  * @param {Option} [option]
  * @return {Tasks} gulpタスク
  */
-module.exports = getTasks;
-
-/**
- *
- * @param option
- */
-function getTasks(option: Option): Tasks {
+export function get(option: Option): Tasks {
   option = initOption(option);
 
   const tsc = cb => {
