@@ -29,7 +29,7 @@ export interface Tasks {
  * @param {Option} [option]
  * @return {Tasks} gulpタスク
  */
-export function get(option: Option): Tasks {
+export function get(option?: Option): Tasks {
   option = initOption(option);
 
   const tsc = cb => {
