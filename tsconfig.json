@@ -1,17 +1,14 @@
 {
   "compilerOptions": {
-    "incremental": true,
     "target": "es6",
-    "module": "es2015",
+    "module": "commonjs",
     "declaration": true,
     "declarationMap": true,
     "outDir": "./bin",
-    "rootDir": "../sample",
+    "rootDir": "./src",
 
     /* allow comment */
     "moduleResolution": "node", //commentable
     "esModuleInterop": true
-  },
-  "include": ["../sample/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  }
 }

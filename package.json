@@ -1,8 +1,9 @@
 {
   "name": "gulptask-tsc",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "TypeScript compile task for gulp.js",
-  "main": "./index.js",
+  "main": "bin/index.js",
+  "types": "bin/index.d.ts",
   "repository": "https://MasatoMakino@github.com/MasatoMakino/gulptask-tsc.git",
   "author": "MasatoMakino <unagiinu.g@gmail.com>",
   "license": "MIT",
@@ -14,5 +15,8 @@
   },
   "devDependencies": {
     "prettier": "^1.18.2"
+  },
+  "scripts": {
+    "build": "npx tsc --project ./tsconfig.json"
   }
 }
