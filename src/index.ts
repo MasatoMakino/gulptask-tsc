@@ -40,11 +40,12 @@ export function get(option?: Option): Tasks {
     });
   };
 
-  const tscClean = async () => {
-    (option.projects as string[]).forEach(val => {
-      series(getCleanTask(val), tsc);
-    });
+  const clear = async () => {
+    for (let val of option.projects as string[]) {
+      await getCleanTask(val)();
+    }
   };
+  const tscClean = series(clear, tsc);
 
   const watchTsc = () => {
     const callback = onCompleteExecTask();
@@ -55,9 +56,9 @@ export function get(option?: Option): Tasks {
   };
 
   return {
-    tsc: tsc,
-    tscClean: tscClean,
-    watchTsc: watchTsc
+    tsc,
+    tscClean,
+    watchTsc
   };
 }
 

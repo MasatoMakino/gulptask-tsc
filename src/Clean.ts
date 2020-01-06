@@ -40,25 +40,23 @@ export function getCleanTask(project: string): Function {
   const projectJson = Hjson.parse(fs.readFileSync(project, "utf8"));
   const binDir = getBinDir(project, projectJson);
   const buildInfoDir = initBuildInfoDir(project, projectJson);
-
   return generateCleanTask(buildInfoDir, binDir);
 }
 
 function generateCleanTask(buildInfoDir: string, binDir?: string): Function {
-  const clean = cb => {
+  const clean = async() => {
     const pathArray = [`${buildInfoDir}/*.tsbuildinfo`];
 
     if (binDir) {
       pathArray.push(`${binDir}/**/*.(d.ts|map|js|tsbuildinfo)`);
     } else {
       console.log(
-        "tsconfig.jsonにoutDirオプションた設定されていません。tsbuildinfo以外のファイルの削除はスキップされます。"
+        "tsconfig.jsonにoutDirオプションが設定されていません。tsbuildinfo以外のファイルの削除はスキップされます。"
       );
     }
 
     return del(pathArray).then(paths => {
       console.log("Files and folders that would be deleted:", paths);
-      cb();
     });
   };
   return clean;

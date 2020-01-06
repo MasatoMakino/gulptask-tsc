@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Hjson = require("hjson");
 const fs = require("fs");
@@ -38,18 +46,17 @@ function getCleanTask(project) {
 }
 exports.getCleanTask = getCleanTask;
 function generateCleanTask(buildInfoDir, binDir) {
-    const clean = cb => {
+    const clean = () => __awaiter(this, void 0, void 0, function* () {
         const pathArray = [`${buildInfoDir}/*.tsbuildinfo`];
         if (binDir) {
             pathArray.push(`${binDir}/**/*.(d.ts|map|js|tsbuildinfo)`);
         }
         else {
-            console.log("tsconfig.jsonにoutDirオプションた設定されていません。tsbuildinfo以外のファイルの削除はスキップされます。");
+            console.log("tsconfig.jsonにoutDirオプションが設定されていません。tsbuildinfo以外のファイルの削除はスキップされます。");
         }
         return del(pathArray).then(paths => {
             console.log("Files and folders that would be deleted:", paths);
-            cb();
         });
-    };
+    });
     return clean;
 }

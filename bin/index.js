@@ -26,11 +26,12 @@ function get(option) {
             child.stdout.on("data", onStdOut);
         });
     };
-    const tscClean = () => __awaiter(this, void 0, void 0, function* () {
-        option.projects.forEach(val => {
-            series(Clean_1.getCleanTask(val), tsc);
-        });
+    const clear = () => __awaiter(this, void 0, void 0, function* () {
+        for (let val of option.projects) {
+            yield Clean_1.getCleanTask(val)();
+        }
     });
+    const tscClean = series(clear, tsc);
     const watchTsc = () => {
         const callback = onCompleteExecTask();
         option.projects.forEach(val => {
@@ -39,9 +40,9 @@ function get(option) {
         });
     };
     return {
-        tsc: tsc,
-        tscClean: tscClean,
-        watchTsc: watchTsc
+        tsc,
+        tscClean,
+        watchTsc
     };
 }
 exports.get = get;
