@@ -9,7 +9,7 @@ import { getCleanTask } from "./Clean";
  * @param {string} [project = "./tsconfig.json"]
  */
 export interface Option {
-  project?: string;
+  projects?: string | string[];
 }
 
 /**
@@ -34,16 +34,24 @@ export function get(option?: Option): Tasks {
 
   const tsc = cb => {
     const callback = onCompleteExecTask(cb);
-    const child = exec(`npx tsc --project ${option.project}`, callback);
-    child.stdout.on("data", onStdOut);
+    (option.projects as string[]).forEach(val => {
+      const child = exec(`npx tsc --project ${val}`, callback);
+      child.stdout.on("data", onStdOut);
+    });
   };
 
-  const tscClean = series(getCleanTask(option.project), tsc);
+  const tscClean = async () => {
+    (option.projects as string[]).forEach(val => {
+      series(getCleanTask(val), tsc);
+    });
+  };
 
   const watchTsc = () => {
     const callback = onCompleteExecTask();
-    const child = exec(`npx tsc -w --project ${option.project}`, callback);
-    child.stdout.on("data", onStdOut);
+    (option.projects as string[]).forEach(val => {
+      const child = exec(`npx tsc -w --project ${val}`, callback);
+      child.stdout.on("data", onStdOut);
+    });
   };
 
   return {
@@ -55,9 +63,15 @@ export function get(option?: Option): Tasks {
 
 function initOption(option: Option) {
   if (option == null) option = {};
-  if (option.project == null) option.project = "./tsconfig.json";
+  if (option.projects == null) option.projects = "./tsconfig.json";
 
-  option.project = path.resolve(process.cwd(), option.project);
+  if (!Array.isArray(option.projects)) {
+    option.projects = [option.projects];
+  }
+
+  option.projects = option.projects.map(val => {
+    return path.resolve(process.cwd(), val);
+  });
 
   return option;
 }
