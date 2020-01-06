@@ -1,6 +1,6 @@
 {
   "name": "gulptask-tsc",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "description": "TypeScript compile task for gulp.js",
   "main": "bin/index.js",
   "types": "bin/index.d.ts",

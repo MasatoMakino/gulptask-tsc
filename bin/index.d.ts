@@ -3,7 +3,7 @@
  * @param {string} [project = "./tsconfig.json"]
  */
 export interface Option {
-    project?: string;
+    projects?: string | string[];
 }
 /**
  * @typedef Tasks

@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const { exec } = require("child_process");
 const path = require("path");
@@ -13,14 +21,22 @@ function get(option) {
     option = initOption(option);
     const tsc = cb => {
         const callback = onCompleteExecTask(cb);
-        const child = exec(`npx tsc --project ${option.project}`, callback);
-        child.stdout.on("data", onStdOut);
+        option.projects.forEach(val => {
+            const child = exec(`npx tsc --project ${val}`, callback);
+            child.stdout.on("data", onStdOut);
+        });
     };
-    const tscClean = series(Clean_1.getCleanTask(option.project), tsc);
+    const tscClean = () => __awaiter(this, void 0, void 0, function* () {
+        option.projects.forEach(val => {
+            series(Clean_1.getCleanTask(val), tsc);
+        });
+    });
     const watchTsc = () => {
         const callback = onCompleteExecTask();
-        const child = exec(`npx tsc -w --project ${option.project}`, callback);
-        child.stdout.on("data", onStdOut);
+        option.projects.forEach(val => {
+            const child = exec(`npx tsc -w --project ${val}`, callback);
+            child.stdout.on("data", onStdOut);
+        });
     };
     return {
         tsc: tsc,
@@ -32,9 +48,14 @@ exports.get = get;
 function initOption(option) {
     if (option == null)
         option = {};
-    if (option.project == null)
-        option.project = "./tsconfig.json";
-    option.project = path.resolve(process.cwd(), option.project);
+    if (option.projects == null)
+        option.projects = "./tsconfig.json";
+    if (!Array.isArray(option.projects)) {
+        option.projects = [option.projects];
+    }
+    option.projects = option.projects.map(val => {
+        return path.resolve(process.cwd(), val);
+    });
     return option;
 }
 const onCompleteExecTask = (cb) => {
