@@ -1,6 +1,6 @@
 {
   "name": "gulptask-tsc",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "TypeScript compile task for gulp.js",
   "main": "bin/index.js",
   "types": "bin/index.d.ts",
@@ -14,7 +14,7 @@
     "typescript": "^3.8.3"
   },
   "devDependencies": {
-    "prettier": "^2.0.2"
+    "prettier": "^2.0.5"
   },
   "scripts": {
     "build": "npx tsc --project ./tsconfig.json"
