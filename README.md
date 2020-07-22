@@ -1,6 +1,9 @@
 # gulptask-tsc
 
-TypeScript compile task for gulp.js
+> TypeScript compile task for gulp.js
+
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+[![Maintainability](https://api.codeclimate.com/v1/badges/84bae9c1712c6982d25b/maintainability)](https://codeclimate.com/github/MasatoMakino/gulptask-tsc/maintainability)
 
 ## Getting Started
 
