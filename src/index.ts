@@ -32,9 +32,9 @@ export interface Tasks {
 export function get(option?: Option): Tasks {
   option = initOption(option);
 
-  const tsc = cb => {
+  const tsc = (cb) => {
     const callback = onCompleteExecTask(cb);
-    (option.projects as string[]).forEach(val => {
+    (option.projects as string[]).forEach((val) => {
       const child = exec(`npx tsc --project ${val}`, callback);
       child.stdout.on("data", onStdOut);
     });
@@ -58,13 +58,13 @@ export function get(option?: Option): Tasks {
   return {
     tsc,
     tscClean,
-    watchTsc
+    watchTsc,
   };
 }
 
 function initOption(option: Option) {
-  if (option == null) option = {};
-  if (option.projects == null) option.projects = "./tsconfig.json";
+  option = option ?? {};
+  option.projects = option.projects ?? "./tsconfig.json";
 
   if (!Array.isArray(option.projects)) {
     option.projects = [option.projects];
