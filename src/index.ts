@@ -1,16 +1,10 @@
-const { exec } = require("child_process");
-const path = require("path");
+import { getCompileTasks } from "./Compile";
+
+
 const { series } = require("gulp");
 
 import { getCleanTask } from "./Clean";
-
-/**
- * @typedef Option
- * @param {string} [project = "./tsconfig.json"]
- */
-export interface Option {
-  projects?: string | string[];
-}
+import { Option, initOption } from "./Option";
 
 /**
  * @typedef Tasks
@@ -32,73 +26,21 @@ export interface Tasks {
 export function get(option?: Option): Tasks {
   option = initOption(option);
 
-  const tsc = (cb) => {
-    const callback = onCompleteExecTask(cb);
-    (option.projects as string[]).forEach((val) => {
-      const child = exec(`npx tsc --project ${val}`, callback);
-      child.stdout.on("data", onStdOut);
-    });
-  };
+ const compileTasks = getCompileTasks( option );
 
   const clear = async () => {
     for (let val of option.projects as string[]) {
       await getCleanTask(val)();
     }
   };
-  const tscClean = series(clear, tsc);
+  const tscClean = series(clear, compileTasks.tsc );
 
-  const watchTsc = () => {
-    const callback = onCompleteExecTask();
-    (option.projects as string[]).forEach((val) => {
-      const child = exec(`npx tsc -w --project ${val}`, callback);
-      child.stdout.on("data", onStdOut);
-    });
-  };
+
 
   return {
-    tsc,
+    ...compileTasks,
     tscClean,
-    watchTsc,
   };
 }
 
-function initOption(option: Option) {
-  option = option ?? {};
-  option.projects = option.projects ?? "./tsconfig.json";
 
-  if (!Array.isArray(option.projects)) {
-    option.projects = [option.projects];
-  }
-
-  option.projects = option.projects.map((val) => {
-    return path.resolve(process.cwd(), val);
-  });
-
-  return option;
-}
-
-const onCompleteExecTask = (cb?: Function) => {
-  return (error, stdout, stderr) => {
-    if (error) {
-      console.error(`[ERROR] ${error}`);
-      return;
-    }
-    if (stdout) console.log(`stdout: ${stdout}`);
-    if (stderr) console.log(`stderr: ${stderr}`);
-    if (cb) cb();
-  };
-};
-
-const onStdOut = (data) => {
-  let msg = Buffer.from(data, "utf-8").toString().trim();
-
-  //FIXME : 行頭に制御文字？「c」が入ることがある。なんの意味なのか不明。本家tscにもある。
-  msg = msg.replace(/^c/, "");
-  if (msg === "" || msg == null) return;
-
-  if (msg.includes(": error")) {
-    console.error(msg);
-  } else {
-    console.log(msg);
-  }
-};
