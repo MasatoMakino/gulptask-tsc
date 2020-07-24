@@ -5,20 +5,20 @@ export interface CompileTasks {
   tsc: Function;
   watchTsc: Function;
 }
+
 export function getCompileTasks(option: Option): CompileTasks {
-  const tsc = (cb) => {
-    const callback = onCompleteExecTask(cb);
-    (option.projects as string[]).forEach((val) => {
-      const child = exec(`npx tsc --project ${val}`, callback);
-      child.stdout.on("data", onStdOut);
+  const projects = option.projects as string[];
+
+  const tsc = async () => {
+    const processArray: Promise<null>[] = projects.map((val) => {
+      return asyncExec(`npx tsc --project ${val}`);
     });
+    return Promise.all(processArray);
   };
 
-  const watchTsc = async () => {
-    const callback = onCompleteExecTask();
-    (option.projects as string[]).forEach((val) => {
-      const child = exec(`npx tsc -w --project ${val}`, callback);
-      child.stdout.on("data", onStdOut);
+  const watchTsc = () => {
+    projects.forEach((val) => {
+      asyncExec(`npx tsc -w --project ${val}`);
     });
   };
 
@@ -28,27 +28,30 @@ export function getCompileTasks(option: Option): CompileTasks {
   };
 }
 
-const asyncExec = (command: string) => {
+/**
+ * child_processを実行する
+ * @param command
+ */
+const asyncExec = (command: string): Promise<null> => {
   return new Promise((resolve, reject) => {
     const child = exec(command, (error, stdout, stderr) => {
-      const exec = onCompleteExecTask();
-      exec(error, stdout, stderr);
+      onCompleteExecTask(error, stdout, stderr);
       resolve();
     });
     child.stdout.on("data", onStdOut);
   });
 };
 
-const onCompleteExecTask = (cb?: Function): Function => {
-  return (error, stdout, stderr) => {
-    if (error) {
-      console.error(`[ERROR] ${error}`);
-      return;
-    }
-    if (stdout) console.log(`stdout: ${stdout}`);
-    if (stderr) console.log(`stderr: ${stderr}`);
-    if (cb) cb();
-  };
+/**
+ * child_processのcallback関数
+ */
+const onCompleteExecTask = (error, stdout, stderr): void => {
+  if (error) {
+    console.error(`[ERROR] ${error}`);
+    return;
+  }
+  if (stdout) console.log(`stdout: ${stdout}`);
+  if (stderr) console.log(`stderr: ${stderr}`);
 };
 
 const onStdOut = (data) => {

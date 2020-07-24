@@ -1,4 +1,4 @@
-const { tscClean, tsc, watchTsc } = require("./bin").get({
+const { tscClean, tsc, watchTsc } = require("./").get({
   projects: ["./tsconfig.json", "./tsconfig.esm.json"]
 });
 exports.tsc = tsc;
