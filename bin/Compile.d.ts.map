@@ -1,0 +1,1 @@
+{"version":3,"file":"Compile.d.ts","sourceRoot":"","sources":["../src/Compile.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,MAAM,EAAE,MAAM,UAAU,CAAC;AAElC,MAAM,WAAW,YAAY;IAC3B,GAAG,EAAE,QAAQ,CAAC;IACd,QAAQ,EAAE,QAAQ,CAAC;CACpB;AAED,wBAAgB,eAAe,CAAC,MAAM,EAAE,MAAM,GAAG,YAAY,CAoB5D"}

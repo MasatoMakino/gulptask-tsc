@@ -1,10 +1,4 @@
-/**
- * @typedef Option
- * @param {string} [project = "./tsconfig.json"]
- */
-export interface Option {
-    projects?: string | string[];
-}
+import { Option } from "./Option";
 /**
  * @typedef Tasks
  * @param {Function} tsc
