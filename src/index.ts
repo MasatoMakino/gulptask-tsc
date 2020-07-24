@@ -49,7 +49,7 @@ export function get(option?: Option): Tasks {
 
   const watchTsc = () => {
     const callback = onCompleteExecTask();
-    (option.projects as string[]).forEach(val => {
+    (option.projects as string[]).forEach((val) => {
       const child = exec(`npx tsc -w --project ${val}`, callback);
       child.stdout.on("data", onStdOut);
     });
@@ -70,7 +70,7 @@ function initOption(option: Option) {
     option.projects = [option.projects];
   }
 
-  option.projects = option.projects.map(val => {
+  option.projects = option.projects.map((val) => {
     return path.resolve(process.cwd(), val);
   });
 
@@ -89,10 +89,8 @@ const onCompleteExecTask = (cb?: Function) => {
   };
 };
 
-const onStdOut = data => {
-  let msg = Buffer.from(data, "utf-8")
-    .toString()
-    .trim();
+const onStdOut = (data) => {
+  let msg = Buffer.from(data, "utf-8").toString().trim();
 
   //FIXME : 行頭に制御文字？「c」が入ることがある。なんの意味なのか不明。本家tscにもある。
   msg = msg.replace(/^c/, "");
