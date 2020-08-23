@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.get = void 0;
 const { series } = require("gulp");
 const Compile_1 = require("./Compile");
 const Clean_1 = require("./Clean");
@@ -26,6 +27,7 @@ function get(option) {
             yield Clean_1.getCleanTask(val)();
         }
     });
+    //TODO remove series of gulp
     const tscClean = series(clear, compileTasks.tsc);
     return Object.assign(Object.assign({}, compileTasks), { tscClean });
 }

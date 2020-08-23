@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getCompileTasks = void 0;
 const { exec } = require("child_process");
 function getCompileTasks(option) {
     const projects = option.projects;

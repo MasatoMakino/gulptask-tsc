@@ -30,6 +30,8 @@ export function get(option?: Option): Tasks {
       await getCleanTask(val)();
     }
   };
+
+  //TODO remove series of gulp
   const tscClean = series(clear, compileTasks.tsc);
 
   return {

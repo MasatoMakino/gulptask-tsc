@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.initOption = void 0;
 const path = require("path");
 function initOption(option) {
     var _a;
