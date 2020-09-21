@@ -16,11 +16,19 @@ export interface Tasks {
 }
 
 /**
+ * @deprecated Use generateTasks
+ * @param option
+ */
+export function get(option?: Option): Tasks {
+  return generateTasks(option);
+}
+
+/**
  * tsc実行タスクを取得する。
  * @param {Option} [option]
  * @return {Tasks} gulpタスク
  */
-export function get(option?: Option): Tasks {
+export function generateTasks(option?: Option): Tasks {
   option = initOption(option);
 
   const compileTasks = getCompileTasks(option);
