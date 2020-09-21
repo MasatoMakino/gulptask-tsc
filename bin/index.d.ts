@@ -11,9 +11,14 @@ export interface Tasks {
     watchTsc: Function;
 }
 /**
+ * @deprecated Use generateTasks
+ * @param option
+ */
+export declare function get(option?: Option): Tasks;
+/**
  * tsc実行タスクを取得する。
  * @param {Option} [option]
  * @return {Tasks} gulpタスク
  */
-export declare function get(option?: Option): Tasks;
+export declare function generateTasks(option?: Option): Tasks;
 //# sourceMappingURL=index.d.ts.map

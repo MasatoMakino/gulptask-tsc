@@ -9,17 +9,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.get = void 0;
+exports.generateTasks = exports.get = void 0;
 const { series } = require("gulp");
 const Compile_1 = require("./Compile");
 const Clean_1 = require("./Clean");
 const Option_1 = require("./Option");
 /**
+ * @deprecated Use generateTasks
+ * @param option
+ */
+function get(option) {
+    return generateTasks(option);
+}
+exports.get = get;
+/**
  * tsc実行タスクを取得する。
  * @param {Option} [option]
  * @return {Tasks} gulpタスク
  */
-function get(option) {
+function generateTasks(option) {
     option = Option_1.initOption(option);
     const compileTasks = Compile_1.getCompileTasks(option);
     const clear = () => __awaiter(this, void 0, void 0, function* () {
@@ -31,4 +39,4 @@ function get(option) {
     const tscClean = series(clear, compileTasks.tsc);
     return Object.assign(Object.assign({}, compileTasks), { tscClean });
 }
-exports.get = get;
+exports.generateTasks = generateTasks;
