@@ -10,7 +10,7 @@ export function getCompileTasks(option: Option): CompileTasks {
   const projects = option.projects as string[];
 
   const tsc = async () => {
-    const processArray: Promise<null>[] = projects.map((val) => {
+    const processArray: Promise<void>[] = projects.map((val) => {
       return asyncExec(`npx tsc --project ${val}`);
     });
     return Promise.all(processArray);
@@ -32,7 +32,7 @@ export function getCompileTasks(option: Option): CompileTasks {
  * child_processを実行する
  * @param command
  */
-const asyncExec = (command: string): Promise<null> => {
+const asyncExec = (command: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const child = exec(command, (error, stdout, stderr) => {
       onCompleteExecTask(error, stdout, stderr);

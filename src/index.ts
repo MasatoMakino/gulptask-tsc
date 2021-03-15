@@ -1,4 +1,4 @@
-const { series } = require("gulp");
+import { series } from "gulp";
 import { getCompileTasks } from "./Compile";
 import { getCleanTask } from "./Clean";
 import { Option, initOption } from "./Option";
