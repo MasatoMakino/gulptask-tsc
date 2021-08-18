@@ -18,7 +18,7 @@ npm install https://github.com/MasatoMakino/gulptask-tsc.git --save-dev
 Import tasks into your `gulpfile.js`.
 
 ```gulpfile.js
-const { tsc, tscClean, watchTsc } = require("gulptask-tsc").get();
+const { tsc, tscClean, watchTsc } = require("gulptask-tsc").generateTasks();
 
 exports.tsc = tsc;
 exports.tscClean = tscClean;
